@@ -1,0 +1,17 @@
+{
+  "name": "music-collection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./music",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Ethan Miller",
+  "license": "ISC",
+  "dependencies": {
+    "readline-promise": "^1.0.4"
+  },
+  "devDependencies": {
+    "jest": "^24.5.0"
+  }
+}
