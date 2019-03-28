@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+const { nextInput, close } = require("./cli");
+
+const _state = {
+  songs: [],
+  shouldQuit: false
+};
+
+const CMD_ADD = "add";
+const CMD_QUIT = "quit";
+const CMD_PLAY = "play";
+const CMD_SHOW = "show";
+const COMMANDS = [CMD_ADD, CMD_QUIT, CMD_PLAY, CMD_SHOW];
+
+const run = async () => {
+  while (!_state.shouldQuit) {
+    let cmd;
+    let args;
+
+    try {
+      ({ cmd, args } = await nextInput(COMMANDS));
+    } catch (e) {
+      console.error("Error encontered while getting user input:", e);
+    }
+
+    console.log({ cmd, args });
+
+    if (cmd === "quit") {
+      _state.shouldQuit = true;
+      close();
+    }
+  }
+};
+
+run();
