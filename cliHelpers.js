@@ -1,12 +1,3 @@
-const readline = require("readline");
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-const close = () => rl.close();
-
 const parseInput = (input, validCommands) =>
   [input.trim()]
     .map(input => input.match(/(?<cmd>[a-z]+)\s*(?<args>.*)/))
@@ -16,10 +7,14 @@ const parseInput = (input, validCommands) =>
       args: groups.args ? groups.args : undefined
     }))[0];
 
-const nextInput = async (validCommands = []) => {
+const nextInput = async (validCommands = [], rlInterface) => {
+  if (!rlInterface || !rlInterface.question) {
+    throw Error("Readline interface not provided.");
+  }
+
   const asyncQuestion = question =>
     new Promise(resolve => {
-      rl.question(question, answer => {
+      rlInterface.question(question, answer => {
         resolve(answer.toString().trim());
       });
     });
@@ -38,4 +33,4 @@ const nextInput = async (validCommands = []) => {
   return parseInput(input, validCommands);
 };
 
-module.exports = { parseInput, nextInput, close, rl };
+module.exports = { parseInput, nextInput };

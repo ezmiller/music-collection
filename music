@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
-const { nextInput, close } = require("./cli");
+const readline = require("readline");
+const { nextInput, close } = require("./cliHelpers");
 
 const _state = {
   songs: [],
   shouldQuit: false
 };
+
+var rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 const CMD_ADD = "add";
 const CMD_QUIT = "quit";
@@ -19,7 +25,7 @@ const run = async () => {
     let args;
 
     try {
-      ({ cmd, args } = await nextInput(COMMANDS));
+      ({ cmd, args } = await nextInput(COMMANDS, rl));
     } catch (e) {
       console.error("Error encontered while getting user input:", e);
     }
@@ -28,7 +34,7 @@ const run = async () => {
 
     if (cmd === "quit") {
       _state.shouldQuit = true;
-      close();
+      rl.close();
     }
   }
 };
