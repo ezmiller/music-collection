@@ -8,9 +8,7 @@
   },
   "author": "Ethan Miller",
   "license": "ISC",
-  "dependencies": {
-    "readline-promise": "^1.0.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "jest": "^24.5.0"
   }
