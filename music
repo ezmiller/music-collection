@@ -2,11 +2,21 @@
 
 const readline = require("readline");
 const { nextInput, close } = require("./cliHelpers");
+const { getStateReducer } = require("./state");
+const { add, quit, show, flush } = require("./actions");
 
-const _state = {
+let _state = {
   songs: [],
-  shouldQuit: false
+  shouldQuit: false,
+  nextOutput: false
 };
+
+const stateReducer = getStateReducer({
+  add,
+  quit,
+  show,
+  flush
+});
 
 var rl = readline.createInterface({
   input: process.stdin,
@@ -21,22 +31,21 @@ const COMMANDS = [CMD_ADD, CMD_QUIT, CMD_PLAY, CMD_SHOW];
 
 const run = async () => {
   while (!_state.shouldQuit) {
-    let cmd;
-    let args;
-
     try {
-      ({ cmd, args } = await nextInput(COMMANDS, rl));
+      let input = await nextInput(COMMANDS, rl);
+      let nextAction = { type: input.cmd, payload: input.args };
+
+      _state = await stateReducer(_state, nextAction);
+
+      if (_state.nextOutput) {
+        console.log(_state.nextOutput);
+        _state = await stateReducer(_state, { type: "flush" });
+      }
     } catch (e) {
       console.error("Error encontered while getting user input:", e);
     }
-
-    console.log({ cmd, args });
-
-    if (cmd === "quit") {
-      _state.shouldQuit = true;
-      rl.close();
-    }
   }
+  rl.close();
 };
 
 run();
