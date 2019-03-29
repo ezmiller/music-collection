@@ -1,20 +1,6 @@
 const { add, quit, flush, show } = require("./actions");
 
 describe("testing actions", () => {
-  test("`add` returns the correct state", () => {
-    state = { songs: [] };
-    args = '"This is the Best" by The Dudes';
-    song = {
-      title: "This is the Best",
-      artist: "The Dudes",
-      played: false
-    };
-
-    expect(add(state, { type: "add", payload: args })).toEqual({
-      songs: [song]
-    });
-  });
-
   test("`quit` returns the correct state", () => {
     state = { shouldQuit: false };
     expect(quit(state, { type: "quit" })).toEqual({
@@ -49,6 +35,28 @@ describe("testing actions", () => {
 
     expect(show(state, { type: "show", payload: "unplayed" })).toMatchObject({
       nextOutput: '"This is the Best" by The Dudes (unplayed)\n'
+    });
+  });
+
+  test("`add` returns the correct state", async () => {
+    const argsToTest = [
+      '"Licensed to Ill" by The Beastie Boys',
+      '"Licensed to Ill" "The Beastie Boys"',
+      '"Licensed to Ill" by "The Beastie Boys'
+    ];
+
+    argsToTest.forEach(args => {
+      const state = { songs: [] };
+      expect(add(state, { type: "add", payload: args })).toMatchObject({
+        songs: [
+          {
+            title: "Licensed to Ill",
+            artist: "The Beastie Boys",
+            played: false
+          }
+        ],
+        nextOutput: 'Added "Licensed to Ill" by The Beastie Boys'
+      });
     });
   });
 });

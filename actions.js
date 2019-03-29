@@ -11,6 +11,14 @@ const parseArgs = args =>
       artist: groups.artist
     }))[0];
 
+const songToStr = (song, playedState = false) => {
+  let s = `"${song.title}" by ${song.artist}`;
+  if (playedState) {
+    s += ` (${song.played ? "played" : "unplayed"})`;
+  }
+  return s;
+};
+
 const add = (state, action) => {
   const { type, payload } = action;
   const args = payload;
@@ -25,12 +33,10 @@ const add = (state, action) => {
 
   return {
     ...state,
-    songs: state.songs.concat(newSong)
+    songs: state.songs.concat(newSong),
+    nextOutput: `Added ${songToStr(newSong)}`
   };
 };
-
-const songToStr = song =>
-  `"${song.title}" by ${song.artist} (${song.played ? "played" : "unplayed"})`;
 
 const show = (state, action) => {
   const { type, payload } = action;
@@ -41,7 +47,7 @@ const show = (state, action) => {
       return {
         ...state,
         nextOutput: state.songs.reduce(
-          (acc, song) => (acc += `${songToStr(song)}\n`),
+          (acc, song) => (acc += `${songToStr(song, true)}\n`),
           ""
         )
       };
@@ -50,14 +56,14 @@ const show = (state, action) => {
         ...state,
         nextOutput: state.songs
           .filter(x => x.played === true)
-          .reduce((acc, song) => acc + `${songToStr(song)}\n`, "")
+          .reduce((acc, song) => acc + `${songToStr(song, true)}\n`, "")
       };
     case "unplayed":
       return {
         ...state,
         nextOutput: state.songs
           .filter(s => s.played === false)
-          .reduce((acc, s) => `${songToStr(s)}\n`, "")
+          .reduce((acc, s) => `${songToStr(s, true)}\n`, "")
       };
     default:
       return state;
