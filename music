@@ -30,6 +30,7 @@ const CMD_SHOW = "show";
 const COMMANDS = [CMD_ADD, CMD_QUIT, CMD_PLAY, CMD_SHOW];
 
 const run = async () => {
+  console.log("\nWelcome to your music collection!\n");
   while (!_state.shouldQuit) {
     try {
       let input = await nextInput(COMMANDS, rl);
@@ -45,6 +46,7 @@ const run = async () => {
       console.error("Error encontered while getting user input:", e);
     }
   }
+  console.log("\nGood Bye!\n");
   rl.close();
 };
 
