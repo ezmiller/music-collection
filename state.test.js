@@ -17,7 +17,7 @@ describe("testing state", () => {
       expect(typeof reducerFn).toBe("function");
     });
 
-    test("can use reducer to update state", () => {
+    test("can use reducer to update state", async () => {
       state = { songs: [] };
 
       song = {
@@ -26,7 +26,10 @@ describe("testing state", () => {
         played: false
       };
 
-      let nextState = reducerFn(state, { type: "addSong", payload: song });
+      let nextState = await reducerFn(state, {
+        type: "addSong",
+        payload: song
+      });
 
       expect(nextState).toEqual({
         songs: [song]
