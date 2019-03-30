@@ -74,7 +74,7 @@ describe("testing cliHelpers", () => {
 
       await nextInput(["add"], rlInterfaceMock);
 
-      expect(spy).toHaveBeenLastCalledWith("> ", expect.any(Function));
+      expect(spy).toHaveBeenLastCalledWith("\n> ", expect.any(Function));
 
       spy.mockRestore();
     });
