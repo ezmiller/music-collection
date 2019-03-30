@@ -29,6 +29,14 @@ const add = (state, action) => {
 
   const { artist, title } = parseArgs(args);
 
+  if (!artist || !title) {
+    return {
+      ...state,
+      nextOutput:
+        'Usage: add "<Song Title>" "<Artist>"\nExample: add "Ride the Lightning" "Metallica"'
+    };
+  }
+
   const newSong = { artist, title, played: false };
 
   return {
@@ -40,6 +48,14 @@ const add = (state, action) => {
 
 const show = (state, action) => {
   const { type, payload } = action;
+
+  if (!payload) {
+    return {
+      ...state,
+      nextOutput: "Usage: show <all | played | unplayed>"
+    };
+  }
+
   const args = payload.trim();
 
   switch (args) {
