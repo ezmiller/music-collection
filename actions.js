@@ -15,9 +15,6 @@ const parseSongTitle = args =>
   [args]
     .map(str => str.match(/"(?<title>[a-zA-Z\s']+)"/))
     .map(result => (result !== null ? result : { groups: [] }))
-    .map(x => {
-      return x;
-    })
     .map(({ groups }) => ({
       title: groups.title
     }))[0];
