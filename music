@@ -3,7 +3,7 @@
 const readline = require("readline");
 const { nextInput, close } = require("./cliHelpers");
 const { getStateReducer } = require("./state");
-const { add, quit, show, flush } = require("./actions");
+const { add, quit, show, flush, play } = require("./actions");
 
 let _state = {
   songs: [],
@@ -15,7 +15,8 @@ const stateReducer = getStateReducer({
   add,
   quit,
   show,
-  flush
+  flush,
+  play
 });
 
 var rl = readline.createInterface({

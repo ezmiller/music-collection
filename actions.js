@@ -19,6 +19,38 @@ const songToStr = (song, playedState = false) => {
   return s;
 };
 
+const play = (state, action) => {
+  const { type, payload } = action;
+
+  if (!payload) {
+    return {
+      ...state,
+      nextOutput: 'Usage: play "<Song Title>"'
+    };
+  }
+
+  songTitle = payload.trim();
+
+  const foundSongTitle = [
+    state.songs.filter(s => s.title === songTitle)[0]
+  ].map(found => (!found ? false : found))[0];
+
+  if (!foundSongTitle) {
+    return {
+      ...state,
+      nextOutput: "Sorry, that song isn't in your library. Please try again."
+    };
+  }
+
+  return {
+    ...state,
+    songs: state.songs.map(s =>
+      s.title === songTitle ? { ...s, played: true } : s
+    ),
+    nextOutput: `You're listening to ${songTitle}`
+  };
+};
+
 const add = (state, action) => {
   const { type, payload } = action;
   const args = payload;
@@ -100,5 +132,6 @@ module.exports = {
   add,
   quit,
   show,
-  flush
+  flush,
+  play
 };

@@ -1,4 +1,4 @@
-const { add, quit, flush, show } = require("./actions");
+const { add, quit, flush, show, play } = require("./actions");
 
 describe("testing actions", () => {
   test("`quit` returns the correct state", () => {
@@ -57,6 +57,28 @@ describe("testing actions", () => {
         ],
         nextOutput: 'Added "Licensed to Ill" by The Beastie Boys'
       });
+    });
+  });
+
+  test("`play` returns the correct state", () => {
+    let state;
+    const song = {
+      title: "This is the Best",
+      artist: "The Dudes",
+      played: false
+    };
+
+    state = { songs: [song] };
+    expect(
+      play(state, { type: "play", payload: "Nonexistant song" })
+    ).toMatchObject({
+      nextOutput: "Sorry, that song isn't in your library. Please try again."
+    });
+
+    state = { songs: [song] };
+    expect(play(state, { type: "play", payload: song.title })).toMatchObject({
+      songs: [{ ...song, played: true }],
+      nextOutput: `You're listening to ${song.title}`
     });
   });
 });
