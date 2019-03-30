@@ -70,15 +70,17 @@ describe("testing actions", () => {
 
     state = { songs: [song] };
     expect(
-      play(state, { type: "play", payload: "Nonexistant song" })
+      play(state, { type: "play", payload: '"Nonexistant song"' })
     ).toMatchObject({
       nextOutput: "Sorry, that song isn't in your library. Please try again."
     });
 
     state = { songs: [song] };
-    expect(play(state, { type: "play", payload: song.title })).toMatchObject({
+    expect(
+      play(state, { type: "play", payload: `"${song.title}"` })
+    ).toMatchObject({
       songs: [{ ...song, played: true }],
-      nextOutput: `You're listening to ${song.title}`
+      nextOutput: `You're listening to "${song.title}"`
     });
   });
 });

@@ -11,6 +11,17 @@ const parseArgs = args =>
       artist: groups.artist
     }))[0];
 
+const parseSongTitle = args =>
+  [args]
+    .map(str => str.match(/"(?<title>[a-zA-Z\s']+)"/))
+    .map(result => (result !== null ? result : { groups: [] }))
+    .map(x => {
+      return x;
+    })
+    .map(({ groups }) => ({
+      title: groups.title
+    }))[0];
+
 const songToStr = (song, playedState = false) => {
   let s = `"${song.title}" by ${song.artist}`;
   if (playedState) {
@@ -29,11 +40,9 @@ const play = (state, action) => {
     };
   }
 
-  songTitle = payload.trim();
+  const songTitle = parseSongTitle(action.payload.trim()).title;
 
-  const foundSongTitle = [
-    state.songs.filter(s => s.title === songTitle)[0]
-  ].map(found => (!found ? false : found))[0];
+  const foundSongTitle = state.songs.some(s => s.title === songTitle);
 
   if (!foundSongTitle) {
     return {
@@ -47,7 +56,7 @@ const play = (state, action) => {
     songs: state.songs.map(s =>
       s.title === songTitle ? { ...s, played: true } : s
     ),
-    nextOutput: `You're listening to ${songTitle}`
+    nextOutput: `You're listening to "${songTitle}"`
   };
 };
 
