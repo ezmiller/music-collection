@@ -1,5 +1,5 @@
 const argsRe = new RegExp(
-  /"(?<title>[a-zA-Z\s]+)"(\s+(by)?\s*"?(?<artist>[a-zA-Z\s]+)"?)?/
+  /"(?<title>[a-zA-Z\s']+)"(\s+(by)?\s*"?(?<artist>[a-zA-Z\s']+)"?)?/
 );
 
 const parseArgs = args =>
