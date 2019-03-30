@@ -40,7 +40,7 @@ const run = async () => {
       _state = await stateReducer(_state, nextAction);
 
       if (_state.nextOutput) {
-        rl.write(_state.nextOutput);
+        rl.write(`\n${_state.nextOutput}\n`);
         _state = await stateReducer(_state, { type: "flush" });
       }
     } catch (e) {
