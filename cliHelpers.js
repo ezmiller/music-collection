@@ -29,7 +29,7 @@ const nextInput = async (validCommands = [], rlInterface) => {
     console.warn("nextInput(): `commands` list of valid commands is empty.");
   }
 
-  const input = await asyncQuestion("> ");
+  const input = await asyncQuestion("\n> ");
   return parseInput(input, validCommands);
 };
 
