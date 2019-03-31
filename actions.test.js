@@ -68,7 +68,6 @@ describe("testing actions", () => {
         payload: 'unplayed by "The Dudes"'
       });
 
-      console.log({ nextOutput });
       const regexes = [
         /"This is the Best" by The Dudes \(unplayed\)/,
         /"Where's my Car\?" by The Dudes \(unplayed\)/
