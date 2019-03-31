@@ -16,7 +16,7 @@ describe("testing actions", () => {
   });
 
   describe("testing show action", () => {
-    let songs = [
+    let albums = [
       { title: "This is the Best", artist: "The Dudes", played: false },
       { title: "Where's my Car?", artist: "The Dudes", played: false },
       {
@@ -28,7 +28,7 @@ describe("testing actions", () => {
     ];
 
     test("returns correct state for `all` filter", () => {
-      state = { songs };
+      state = { albums };
 
       const { nextOutput } = show(state, { type: "show", payload: "all" });
 
@@ -45,7 +45,7 @@ describe("testing actions", () => {
     });
 
     test("returns correct state for `unplayed` filter", async () => {
-      state = { songs, nextOutput: false };
+      state = { albums, nextOutput: false };
 
       const { nextOutput } = show(state, { type: "show", payload: "unplayed" });
 
@@ -61,7 +61,7 @@ describe("testing actions", () => {
     });
 
     test("returns correct state for `unplayed` filter w/ artist specified", () => {
-      state = { songs, nextOutput: false };
+      state = { albums, nextOutput: false };
 
       const { nextOutput } = show(state, {
         type: "show",
@@ -92,9 +92,9 @@ describe("testing actions", () => {
     ];
 
     argsToTest.forEach(args => {
-      const state = { songs: [] };
+      const state = { albums: [] };
       expect(add(state, { type: "add", payload: args })).toMatchObject({
-        songs: [
+        albums: [
           {
             title: "Licensed to Ill",
             artist: "The Beastie Boys",
@@ -108,25 +108,25 @@ describe("testing actions", () => {
 
   test("`play` returns the correct state", () => {
     let state;
-    const song = {
+    const album = {
       title: "This is the Best",
       artist: "The Dudes",
       played: false
     };
 
-    state = { songs: [song] };
+    state = { albums: [album] };
     expect(
-      play(state, { type: "play", payload: '"Nonexistant song"' })
+      play(state, { type: "play", payload: '"Nonexistant album"' })
     ).toMatchObject({
-      nextOutput: "Sorry, that song isn't in your library. Please try again."
+      nextOutput: "Sorry, that album isn't in your library. Please try again."
     });
 
-    state = { songs: [song] };
+    state = { albums: [album] };
     expect(
-      play(state, { type: "play", payload: `"${song.title}"` })
+      play(state, { type: "play", payload: `"${album.title}"` })
     ).toMatchObject({
-      songs: [{ ...song, played: true }],
-      nextOutput: `You're listening to "${song.title}"`
+      albums: [{ ...album, played: true }],
+      nextOutput: `You're listening to "${album.title}"`
     });
   });
 });

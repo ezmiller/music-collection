@@ -2,10 +2,10 @@ const argsRe = new RegExp(
   /"(?<title>[a-zA-Z\s']+)"(\s+(by)?\s*"?(?<artist>[a-zA-Z\s']+)"?)?/
 );
 
-const songToStr = (song, playedState = false) => {
-  let s = `"${song.title}" by ${song.artist}`;
+const albumToStr = (album, playedState = false) => {
+  let s = `"${album.title}" by ${album.artist}`;
   if (playedState) {
-    s += ` (${song.played ? "played" : "unplayed"})`;
+    s += ` (${album.played ? "played" : "unplayed"})`;
   }
   return s;
 };
@@ -24,27 +24,27 @@ const play = (state, action) => {
   if (!payload) {
     return {
       ...state,
-      nextOutput: 'Usage: play "<Song Title>"'
+      nextOutput: 'Usage: play "$album"'
     };
   }
 
-  const songTitle = parsePlayArgs(action.payload.trim()).title;
+  const albumTitle = parsePlayArgs(action.payload.trim()).title;
 
-  const foundSongTitle = state.songs.some(s => s.title === songTitle);
+  const foundAlbumTitle = state.albums.some(s => s.title === albumTitle);
 
-  if (!foundSongTitle) {
+  if (!foundAlbumTitle) {
     return {
       ...state,
-      nextOutput: "Sorry, that song isn't in your library. Please try again."
+      nextOutput: "Sorry, that album isn't in your library. Please try again."
     };
   }
 
   return {
     ...state,
-    songs: state.songs.map(s =>
-      s.title === songTitle ? { ...s, played: true } : s
+    albums: state.albums.map(s =>
+      s.title === albumTitle ? { ...s, played: true } : s
     ),
-    nextOutput: `You're listening to "${songTitle}"`
+    nextOutput: `You're listening to "${albumTitle}"`
   };
 };
 
@@ -71,16 +71,16 @@ const add = (state, action) => {
     return {
       ...state,
       nextOutput:
-        'Usage: add "<Song Title>" "<Artist>"\nExample: add "Ride the Lightning" "Metallica"'
+        'Usage: add "<Album Title>" "<Artist>"\nExample: add "Ride the Lightning" "Metallica"'
     };
   }
 
-  const newSong = { artist, title, played: false };
+  const newAlbum = { artist, title, played: false };
 
   return {
     ...state,
-    songs: state.songs.concat(newSong),
-    nextOutput: `Added ${songToStr(newSong)}`
+    albums: state.albums.concat(newAlbum),
+    nextOutput: `Added ${albumToStr(newAlbum)}`
   };
 };
 
@@ -101,7 +101,7 @@ const show = (state, action) => {
   if (!payload) {
     return {
       ...state,
-      nextOutput: "Usage: show <all | played | unplayed>"
+      nextOutput: 'Usage: show <all | unplayed "$artist">'
     };
   }
 
@@ -112,21 +112,21 @@ const show = (state, action) => {
     case "all":
       return {
         ...state,
-        nextOutput: state.songs.reduce(
-          (acc, song) => (acc += `${songToStr(song, true)}\n`),
+        nextOutput: state.albums.reduce(
+          (acc, album) => (acc += `${albumToStr(album, true)}\n`),
           ""
         )
       };
     case "unplayed":
       return {
         ...state,
-        nextOutput: state.songs
+        nextOutput: state.albums
           .filter(s =>
             artist
               ? s.played === false && s.artist === artist
               : s.played === false
           )
-          .reduce((acc, s) => (acc += `${songToStr(s, true)}\n`), "")
+          .reduce((acc, s) => (acc += `${albumToStr(s, true)}\n`), "")
       };
     default:
       return state;
