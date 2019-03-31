@@ -71,7 +71,7 @@ const add = (state, action) => {
     return {
       ...state,
       nextOutput:
-        'Usage: add "<Album Title>" "<Artist>"\nExample: add "Ride the Lightning" "Metallica"'
+        'Usage: add "$album" "$artist"\nExample: add "Ride the Lightning" "Metallica"'
     };
   }
 
