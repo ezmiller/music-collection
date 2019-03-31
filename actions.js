@@ -2,23 +2,6 @@ const argsRe = new RegExp(
   /"(?<title>[a-zA-Z\s']+)"(\s+(by)?\s*"?(?<artist>[a-zA-Z\s']+)"?)?/
 );
 
-const parseArgs = args =>
-  [args]
-    .map(str => str.match(argsRe))
-    .map(result => (result !== null ? result : { groups: [] }))
-    .map(({ groups }) => ({
-      title: groups.title,
-      artist: groups.artist
-    }))[0];
-
-const parseSongTitle = args =>
-  [args]
-    .map(str => str.match(/"(?<title>[a-zA-Z\s']+)"/))
-    .map(result => (result !== null ? result : { groups: [] }))
-    .map(({ groups }) => ({
-      title: groups.title
-    }))[0];
-
 const songToStr = (song, playedState = false) => {
   let s = `"${song.title}" by ${song.artist}`;
   if (playedState) {
@@ -26,6 +9,14 @@ const songToStr = (song, playedState = false) => {
   }
   return s;
 };
+
+const parsePlayArgs = args =>
+  [args]
+    .map(str => str.match(/"(?<title>[a-zA-Z\s']+)"/))
+    .map(result => (result !== null ? result : { groups: [] }))
+    .map(({ groups }) => ({
+      title: groups.title
+    }))[0];
 
 const play = (state, action) => {
   const { type, payload } = action;
@@ -37,7 +28,7 @@ const play = (state, action) => {
     };
   }
 
-  const songTitle = parseSongTitle(action.payload.trim()).title;
+  const songTitle = parsePlayArgs(action.payload.trim()).title;
 
   const foundSongTitle = state.songs.some(s => s.title === songTitle);
 
@@ -57,6 +48,15 @@ const play = (state, action) => {
   };
 };
 
+const parseAddArgs = args =>
+  [args]
+    .map(str => str.match(argsRe))
+    .map(result => (result !== null ? result : { groups: [] }))
+    .map(({ groups }) => ({
+      title: groups.title,
+      artist: groups.artist
+    }))[0];
+
 const add = (state, action) => {
   const { type, payload } = action;
   const args = payload;
@@ -65,7 +65,7 @@ const add = (state, action) => {
     return state;
   }
 
-  const { artist, title } = parseArgs(args);
+  const { artist, title } = parseAddArgs(args);
 
   if (!artist || !title) {
     return {
@@ -84,6 +84,17 @@ const add = (state, action) => {
   };
 };
 
+const parseShowArgs = args =>
+  [args]
+    .map(str =>
+      str.match(/(?<filter>[a-z]+)(\s+by\s+"(?<artist>[a-zA-Z\s']+)")?/)
+    )
+    .map(result => (result !== null ? result : { groups: {} }))
+    .map(({ groups }) => ({
+      filter: groups.filter,
+      artist: groups.artist
+    }))[0];
+
 const show = (state, action) => {
   const { type, payload } = action;
 
@@ -95,8 +106,9 @@ const show = (state, action) => {
   }
 
   const args = payload.trim();
+  const { filter, artist } = parseShowArgs(args);
 
-  switch (args) {
+  switch (filter) {
     case "all":
       return {
         ...state,
@@ -105,19 +117,16 @@ const show = (state, action) => {
           ""
         )
       };
-    case "played":
-      return {
-        ...state,
-        nextOutput: state.songs
-          .filter(x => x.played === true)
-          .reduce((acc, song) => acc + `${songToStr(song, true)}\n`, "")
-      };
     case "unplayed":
       return {
         ...state,
         nextOutput: state.songs
-          .filter(s => s.played === false)
-          .reduce((acc, s) => `${songToStr(s, true)}\n`, "")
+          .filter(s =>
+            artist
+              ? s.played === false && s.artist === artist
+              : s.played === false
+          )
+          .reduce((acc, s) => (acc += `${songToStr(s, true)}\n`), "")
       };
     default:
       return state;
