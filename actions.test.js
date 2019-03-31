@@ -1,14 +1,14 @@
 const { add, quit, flush, show, play } = require("./actions");
 
 describe("testing actions", () => {
-  test("`quit` returns the correct state", () => {
+  test("`quit` action returns the correct state", () => {
     state = { shouldQuit: false };
     expect(quit(state, { type: "quit" })).toEqual({
       shouldQuit: true
     });
   });
 
-  test("`flush` returns the correct state", () => {
+  test("`flush` action returns the correct state", () => {
     state = { nextOutput: "This is a message." };
     expect(flush(state, { type: "flush" })).toEqual({
       nextOutput: false
@@ -83,7 +83,7 @@ describe("testing actions", () => {
     });
   });
 
-  test("`add` returns the correct state", async () => {
+  test("`add` action returns the correct state", async () => {
     const argsToTest = [
       '"Licensed to Ill" by The Beastie Boys',
       '"Licensed to Ill" "The Beastie Boys"',
@@ -105,7 +105,7 @@ describe("testing actions", () => {
     });
   });
 
-  test("`play` returns the correct state", () => {
+  test("`play` action returns the correct state", () => {
     let state;
     const album = {
       title: "This is the Best",
