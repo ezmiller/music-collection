@@ -99,26 +99,55 @@ describe("testing actions", () => {
         expect(nextOutput).toMatch(re);
       });
     });
+
+    test("returns usage message when needed", () => {
+      state = { albums: [], nextOutput: false };
+
+      const { nextOutput } = show(state, { type: "show", payload: "" });
+
+      expect(nextOutput).toMatch(
+        'Usage: show <all "$artist"| unplayed "$artist">'
+      );
+    });
   });
 
-  test("`add` action returns the correct state", async () => {
-    const argsToTest = [
-      '"Licensed to Ill" by The Beastie Boys',
-      '"Licensed to Ill" "The Beastie Boys"',
-      '"Licensed to Ill" by "The Beastie Boys'
-    ];
+  describe("testing `add` action", () => {
+    test("returns the correct state for valid args", async () => {
+      const argsToTest = [
+        '"Licensed to Ill" by The Beastie Boys',
+        '"Licensed to Ill" "The Beastie Boys"',
+        '"Licensed to Ill" by "The Beastie Boys'
+      ];
 
-    argsToTest.forEach(args => {
-      const state = { albums: [] };
-      expect(add(state, { type: "add", payload: args })).toMatchObject({
-        albums: [
-          {
-            title: "Licensed to Ill",
-            artist: "The Beastie Boys",
-            played: false
-          }
-        ],
-        nextOutput: 'Added "Licensed to Ill" by The Beastie Boys'
+      argsToTest.forEach(args => {
+        const state = { albums: [] };
+        expect(add(state, { type: "add", payload: args })).toMatchObject({
+          albums: [
+            {
+              title: "Licensed to Ill",
+              artist: "The Beastie Boys",
+              played: false
+            }
+          ],
+          nextOutput: 'Added "Licensed to Ill" by The Beastie Boys'
+        });
+      });
+    });
+
+    test("returns usage message when needed", () => {
+      state = { albums: [], nextOutput: false };
+
+      const argsToTest = [
+        "Licensed to Ill", // only title
+        "Licensed to Ill by" // title, no artist
+      ];
+
+      argsToTest.forEach(args => {
+        state = { albums: [], nextOutput: false };
+        const { nextOutput } = add(state, { type: "add", payload: args });
+        expect(nextOutput).toBe(
+          'Usage: add "$album" "$artist"\nExample: add "Ride the Lightning" "Metallica"'
+        );
       });
     });
   });
