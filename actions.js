@@ -87,7 +87,7 @@ const add = (state, action) => {
 const parseShowArgs = args =>
   [args]
     .map(str =>
-      str.match(/(?<filter>[a-z]+)(\s+by\s+"(?<artist>[a-zA-Z\s']+)")?/)
+      str.match(/(?<filter>[a-z]+)(\s+by\s+"?(?<artist>[a-zA-Z\s']+)"?)?/)
     )
     .map(result => (result !== null ? result : { groups: {} }))
     .map(({ groups }) => ({
