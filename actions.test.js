@@ -44,6 +44,24 @@ describe("testing actions", () => {
       });
     });
 
+    test("returns correct state for `all` filter w/ artist specified", () => {
+      state = { albums, nextOutput: false };
+
+      const { nextOutput } = show(state, {
+        type: "show",
+        payload: 'all by "The Dudes"'
+      });
+
+      const regexes = [
+        /"This is the Best" by The Dudes \(unplayed\)/,
+        /"Where's my Car\?" by The Dudes \(unplayed\)/,
+        /(?!"Ladies and gentleman we are floating in space" by Spiritualized \(unplayed\))/,
+        /(?!"For the Whole World to See" by Death \(played\))/
+      ];
+
+      regexes.forEach(re => expect(nextOutput).toMatch(re));
+    });
+
     test("returns correct state for `unplayed` filter", async () => {
       state = { albums, nextOutput: false };
 

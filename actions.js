@@ -98,10 +98,12 @@ const parseShowArgs = args =>
 const show = (state, action) => {
   const { type, payload } = action;
 
+  const usageMsg = 'Usage: show <all "$artist"| unplayed "$artist">';
+
   if (!payload) {
     return {
       ...state,
-      nextOutput: 'Usage: show <all | unplayed "$artist">'
+      nextOutput: usageMsg
     };
   }
 
@@ -112,10 +114,9 @@ const show = (state, action) => {
     case "all":
       return {
         ...state,
-        nextOutput: state.albums.reduce(
-          (acc, album) => (acc += `${albumToStr(album, true)}\n`),
-          ""
-        )
+        nextOutput: state.albums
+          .filter(album => (artist ? album.artist === artist : true))
+          .reduce((acc, album) => (acc += `${albumToStr(album, true)}\n`), "")
       };
     case "unplayed":
       return {
@@ -129,7 +130,10 @@ const show = (state, action) => {
           .reduce((acc, s) => (acc += `${albumToStr(s, true)}\n`), "")
       };
     default:
-      return state;
+      return {
+        ...state,
+        nextOutput: usageMsg
+      };
   }
 };
 
