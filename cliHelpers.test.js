@@ -4,7 +4,7 @@ const { parseInput, nextInput } = cli;
 
 describe("testing cliHelpers", () => {
   describe("testing parseInput", () => {
-    it("should extract valid cmd", () => {
+    test("should extract valid cmd", () => {
       validCommands = ["add"];
       expect(parseInput("add", validCommands)).toEqual({
         cmd: "add",
@@ -12,7 +12,7 @@ describe("testing cliHelpers", () => {
       });
     });
 
-    it("should *not* extract invalid cmd", () => {
+    test("should *not* extract invalid cmd", () => {
       validCommands = ["add"];
       expect(parseInput("help", validCommands)).toEqual({
         cmd: undefined,
@@ -28,11 +28,11 @@ describe("testing cliHelpers", () => {
       rlInterfaceMock = { question: () => {} };
     });
 
-    it("should return a promise", () => {
+    test("should return a promise", () => {
       expect(nextInput(["add"], rlInterfaceMock).then).toBeDefined();
     });
 
-    it("errors if not provided an readline interface", async () => {
+    test("errors if not provided an readline interface", async () => {
       expect.assertions(1);
       try {
         await nextInput([]);
@@ -41,7 +41,7 @@ describe("testing cliHelpers", () => {
       }
     });
 
-    it("errors if not provided list of valid commands", async () => {
+    test("errors if not provided list of valid commands", async () => {
       expect.assertions(1);
       try {
         await nextInput("add", rlInterfaceMock);
@@ -52,7 +52,7 @@ describe("testing cliHelpers", () => {
       }
     });
 
-    it("outputs warning message if no valid commands provided", async () => {
+    test("outputs warning message if no valid commands provided", async () => {
       const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
       jest
         .spyOn(rlInterfaceMock, "question")
@@ -67,7 +67,7 @@ describe("testing cliHelpers", () => {
       spy.mockRestore();
     });
 
-    it("calls rlInterfaceMock.question with correct prompt", async () => {
+    test("calls rlInterfaceMock.question with correct prompt", async () => {
       const spy = jest
         .spyOn(rlInterfaceMock, "question")
         .mockImplementation((question, cb) => cb(""));
@@ -79,7 +79,7 @@ describe("testing cliHelpers", () => {
       spy.mockRestore();
     });
 
-    it("correctly parses user input", async () => {
+    test("correctly parses user input", async () => {
       rlInterfaceMock.question = jest
         .fn()
         .mockImplementation((question, cb) =>
