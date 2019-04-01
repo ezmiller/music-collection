@@ -6,11 +6,13 @@ This is a mock music collection CLI. It uses the core package `readline` to prom
 
 In implementing this program, I used functinal instead of OO patterns. The program state is managed in a single object `state`; that state is updated by a `stateReducer` that matches action objects to updater functions that know how to change the state based on a given action. 
 
-The `stateReducer` function is created by a factory function `getStateReducer` that takes a map whose keys are action names and whose values are updater functions.
+The `stateReducer` function is created by a factory function `getStateReducer` located in `state.js` that takes a map whose keys are action names and whose values are updater functions.
 
 A simple example of follows: 
 
 ```javascript
+const { getStateReducer } = require('./state');
+
 let _state = {
   albums: [],
   shouldQuit: false,
