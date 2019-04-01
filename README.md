@@ -41,6 +41,6 @@ To setup you need to be using Node v11.6.0. Then you can just running
 npm install
 ```
 
-To run the program you do: `.music`.
+To run the program you do: `./music`.
 
 To run the tests you do `npm run test`.
