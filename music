@@ -6,7 +6,7 @@ const { getStateReducer } = require("./state");
 const { add, quit, show, flush, play } = require("./actions");
 
 let _state = {
-  songs: [],
+  albums: [],
   shouldQuit: false,
   nextOutput: false
 };
